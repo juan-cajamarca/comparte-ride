@@ -11,6 +11,7 @@ A Django-based API Rest application to share rides.
 ## Deployment
 
 ### Development
+`docker-compose -f docker-compose.dev.yml up -d && docker-compose -f docker-compose.dev.yml logs -f`
 
 ### Test
 

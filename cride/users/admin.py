@@ -20,7 +20,7 @@ class CustomUserAdmin(UserAdmin):
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('reputation', 'rides_taken', 'rides_offered')
+    list_display = ('user', 'reputation', 'rides_taken', 'rides_offered')
     search_fields = (
         'user__username',
         'user__email',

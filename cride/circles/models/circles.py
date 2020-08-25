@@ -42,5 +42,5 @@ class Circle(CRideModel):
     def __str__(self):
         return self.name
 
-    class Meta(CRideModel.META):
+    class Meta(CRideModel.Meta):
         ordering = ['-rides_taken', '-rides_offered']

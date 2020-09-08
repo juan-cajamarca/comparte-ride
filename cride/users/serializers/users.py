@@ -1,4 +1,6 @@
 # Django
+from django.conf import settings
+from django.utils import timezone
 from django.core.validators import RegexValidator
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
@@ -11,6 +13,10 @@ from rest_framework.validators import UniqueValidator
 
 # Models
 from cride.users.models import User, Profile
+
+# Utilities
+import jwt
+from datetime import timedelta
 
 
 class UserModelSerializer(serializers.ModelSerializer):
@@ -63,8 +69,7 @@ class UserSignUpSerializer(serializers.Serializer):
 
     def send_confirmation_email(self, user):
         verification_token = self.generate_verification_token(user)
-        subject = 'Welcome @{}!' \ 
-            'Verify your account to start using CRide!'.format(user.username)
+        subject = 'Welcome @{}! Verify your account to start using CRide!'.format(user.username)
         from_email = 'Comparte Ride <noreply@comparteride.com>'
         content = render_to_string(
             'emails/users/account_verification.html',
@@ -75,7 +80,14 @@ class UserSignUpSerializer(serializers.Serializer):
         msg.send()
 
     def generate_verification_token(self, user):
-        return 'abc'
+        exp_date = timezone.now() + timedelta(days=3)
+        payload = {
+            'user': user.username,
+            'exp': int(exp_date.timestamp()),
+            'type': 'email_confirmation'
+        }
+        token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
+        return token.decode()
 
 
 class UserLoginSerializer(serializers.Serializer):

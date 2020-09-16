@@ -17,6 +17,7 @@ class CircleViewSet(
     mixins.ListModelMixin, viewsets.GenericViewSet
 ):
     serializer_class = CircleModelSerializer
+    lookup_field = 'slug_name'
     
 
     def get_queryset(self):

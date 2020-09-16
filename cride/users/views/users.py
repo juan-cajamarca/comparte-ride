@@ -1,6 +1,6 @@
 # Django REST Framework
-from rest_framework import status
-from rest_framework.views import APIView
+from rest_framework import status, viewsets
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 # Serializers
@@ -12,8 +12,9 @@ from cride.users.serializers import (
 )
 
 
-class UserLoginAPIView(APIView):
-    def post(self, request, *args, **kwargs):
+class UserViewSet(viewsets.GenericViewSet):
+    @action(detail=False, methods=['post'])
+    def login(self, request):
         serializer = UserLoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user, token = serializer.save()
@@ -23,16 +24,16 @@ class UserLoginAPIView(APIView):
         }
         return Response(data, status=status.HTTP_201_CREATED)
 
-class UserSignUpAPIView(APIView):
-    def post(self, request, *args, **kwargs):
+    @action(detail=False, methods=['post'])
+    def signup(self, request):
         serializer = UserSignUpSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         data = UserModelSerializer(user).data
         return Response(data, status=status.HTTP_201_CREATED)
 
-class AccountVerificationAPIView(APIView):
-    def post(self, request, *args, **kwargs):
+    @action(detail=False, methods=['post'])
+    def verify(self, request):
         serializer = AccountVerificationSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
